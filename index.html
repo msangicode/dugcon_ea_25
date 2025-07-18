@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DynamicsCon Regional East Africa - Social Media Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0c1445 0%, #1e3a8a 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .header {
+            grid-column: 1 / -1;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.98);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border-top: 4px solid #d97706;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #d97706, #ea580c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: #1e40af;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .event-info {
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+        }
+
+        .form-section {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border-top: 3px solid #d97706;
+        }
+
+        .form-title {
+            font-size: 1.8rem;
+            background: linear-gradient(45deg, #d97706, #ea580c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .preview-section {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border-top: 3px solid #d97706;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #1e40af;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #d97706;
+            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.1);
+        }
+
+        .photo-upload {
+            border: 2px dashed #e5e7eb;
+            border-radius: 8px;
+            padding: 30px 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .photo-upload:hover {
+            border-color: #d97706;
+            background-color: rgba(217, 119, 6, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 2rem;
+            color: #d97706;
+            margin-bottom: 10px;
+        }
+
+        .upload-text {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .social-image-canvas {
+            width: 800px;
+            height: 450px;
+            border: 3px solid #d97706;
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .social-image-canvas::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('./dug_img.jpeg');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+
+        .canvas-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+            color: white;
+            z-index: 2;
+        }
+
+        .canvas-profile-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 140px;
+            margin-left: 0;
+        }
+
+        .canvas-photo {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 3px solid #ffd700;
+            margin-bottom: 10px;
+            object-fit: cover;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: #ffd700;
+        }
+
+        .canvas-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            margin-bottom: 5px;
+            line-height: 1.2;
+        }
+
+        .canvas-company {
+            font-size: 0.8rem;
+            color: #ffd700;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+            line-height: 1.2;
+            margin-bottom: 10px;
+        }
+
+        .canvas-attending {
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .screenshot-instructions {
+            text-align: center;
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #d97706;
+            margin-top: 20px;
+            max-width: 600px;
+        }
+
+        .screenshot-instructions h4 {
+            color: #1e40af;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .screenshot-instructions p {
+            color: #374151;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .share-tips {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #d97706;
+        }
+
+        .share-tips strong {
+            color: #1e40af;
+        }
+
+        .caption-text {
+            font-style: italic;
+            color: #6b7280;
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .optional {
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: normal;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+                max-width: 600px;
+            }
+            
+            .social-image-canvas {
+                width: 600px;
+                height: 338px;
+            }
+
+            .canvas-profile-section {
+                width: 120px;
+            }
+
+            .canvas-photo {
+                width: 60px;
+                height: 60px;
+            }
+
+            .canvas-name {
+                font-size: 1rem;
+            }
+
+            .canvas-company {
+                font-size: 0.7rem;
+            }
+
+            .canvas-attending {
+                font-size: 0.6rem;
+                padding: 5px 8px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .form-section, .preview-section {
+                padding: 20px;
+            }
+            
+            .social-image-canvas {
+                width: 400px;
+                height: 225px;
+            }
+
+            .canvas-content {
+                padding: 15px;
+            }
+
+            .canvas-profile-section {
+                width: 100px;
+            }
+
+            .canvas-photo {
+                width: 50px;
+                height: 50px;
+            }
+
+            .canvas-name {
+                font-size: 0.9rem;
+            }
+
+            .canvas-company {
+                font-size: 0.6rem;
+            }
+
+            .canvas-attending {
+                font-size: 0.55rem;
+                padding: 4px 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">DynamicsCon East Africa</div>
+            <div class="tagline">Njoo Tuinue Viwango</div>
+            <div class="event-info">
+                <p><strong>Create your personalized social media image</strong></p>
+                <p>Let the world know you're attending the premier Microsoft Dynamics event in East Africa!</p>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h2 class="form-title">Customize Your Image</h2>
+            <form id="imageForm">
+                <div class="form-group">
+                    <label for="fullName">Your Name *</label>
+                    <input type="text" id="fullName" name="fullName" required placeholder="Enter your name">
+                </div>
+
+                <div class="form-group">
+                    <label for="company">Company Name <span class="optional">(Optional)</span></label>
+                    <input type="text" id="company" name="company" placeholder="Enter your company">
+                </div>
+
+                <div class="form-group">
+                    <label>Profile Photo <span class="optional">(Optional)</span></label>
+                    <div class="photo-upload" id="photoUpload">
+                        <div class="upload-icon">📷</div>
+                        <div class="upload-text">Click to upload your photo</div>
+                        <div class="upload-text">JPG, PNG (Max 5MB)</div>
+                    </div>
+                    <input type="file" id="photoFile" name="photoFile" class="file-input" accept="image/*">
+                </div>
+            </form>
+        </div>
+
+        <div class="preview-section">
+            <h3 style="color: #1e40af; margin-bottom: 20px;">Preview Your Image</h3>
+            <div class="social-image-canvas" id="canvas">
+                <div class="canvas-content">
+                    <div class="canvas-profile-section">
+                        <div class="canvas-photo" id="canvasPhoto">👤</div>
+                        <div class="canvas-name" id="canvasName">Your Name</div>
+                        <div class="canvas-company" id="canvasCompany">Your Company</div>
+                        <div class="canvas-attending">
+                            I'm Attending!
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="screenshot-instructions">
+                <h4>📱 Ready to Share?</h4>
+                <p>Take a screenshot of the image above and share it in your circles!</p>
+                <div class="share-tips">
+                    <p><strong>Suggested caption:</strong></p>
+                    <p class="caption-text">"I'm attending DynamicsCon Regional East Africa - Njoo Tuinue Viwango! 🎉 #DynamicsConEA #MicrosoftDynamics"</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2024 DynamicsCon Regional East Africa. All rights reserved.</p>
+            <p>Share your excitement and inspire others to join!</p>
+        </div>
+    </div>
+
+    <script>
+        const photoUpload = document.getElementById('photoUpload');
+        const photoFile = document.getElementById('photoFile');
+        const fullNameInput = document.getElementById('fullName');
+        const companyInput = document.getElementById('company');
+        const canvasPhoto = document.getElementById('canvasPhoto');
+        const canvasName = document.getElementById('canvasName');
+
+        // Photo upload functionality
+        photoUpload.addEventListener('click', () => {
+            photoFile.click();
+        });
+
+        photoFile.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('File size must be less than 5MB');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    canvasPhoto.innerHTML = '';
+                    canvasPhoto.style.backgroundImage = `url(${e.target.result})`;
+                    canvasPhoto.style.backgroundSize = 'cover';
+                    canvasPhoto.style.backgroundPosition = 'center';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Real-time updates
+        fullNameInput.addEventListener('input', (e) => {
+            canvasName.textContent = e.target.value || 'Your Name';
+        });
+
+        companyInput.addEventListener('input', (e) => {
+            const canvasCompany = document.getElementById('canvasCompany');
+            canvasCompany.textContent = e.target.value || 'Your Company';
+        });
+    </script>
+</body>
+</html>
